@@ -1,6 +1,7 @@
 import React, {
   useState,
   useCallback,
+  useEffect,
 } from 'react';
 
 import { useDevbook, Env } from '@devbookhq/sdk';
@@ -15,6 +16,7 @@ interface Props {
 }
 
 function DevbookView({ code: initialCode = '' }: Props) {
+
   const [sizes, setSizes] = useState([50, 50]);
   const [code, setCode] = useState(initialCode);
 
@@ -23,6 +25,7 @@ function DevbookView({ code: initialCode = '' }: Props) {
   const handleEditorChange = useCallback((content: string) => {
     setCode(content);
   }, [setCode]);
+
 
   return (
     <div className="">

@@ -5,6 +5,7 @@ import NormalisedURLDomain from "./normalisedURLDomain";
 import { recursiveMap } from "../utils";
 
 type Props = {
+    onChange?: (text: string) => void,
     askForAppName: boolean,
     askForAPIDomain: boolean,
     askForWebsiteDomain: boolean
@@ -20,8 +21,7 @@ type State = {
 };
 
 export default class AppInfoForm extends React.PureComponent<PropsWithChildren<Props>, State> {
-
-    constructor(props: PropsWithChildren<Props>) {
+    constructor(public props: PropsWithChildren<Props>) {
         super(props);
         // TODO: Add more fields here
         if (!props.askForAPIDomain && !props.askForAppName &&
@@ -97,6 +97,26 @@ export default class AppInfoForm extends React.PureComponent<PropsWithChildren<P
 
     render() {
         if (this.state.formSubmitted) {
+            let text = ''
+
+            const content = recursiveMap(this.props.children, (c: any) => {
+                if (typeof c === "string") {
+                    // TODO: Add more fields here.
+                    if (this.props.askForAppName) {
+                        c = c.split("^{form_appName}").join(this.state.appName);
+                    }
+                    if (this.props.askForAPIDomain) {
+                        c = c.split("^{form_apiDomain}").join(this.state.apiDomain);
+                    }
+                    if (this.props.askForWebsiteDomain) {
+                        c = c.split("^{form_websiteDomain}").join(this.state.websiteDomain);
+                    }
+                    text += c
+                }
+                return c;
+            })
+
+            this.props.onChange?.(text)
             return (
                 <div>
                     <div
@@ -143,21 +163,7 @@ export default class AppInfoForm extends React.PureComponent<PropsWithChildren<P
                             </div>
                         </div>
                     </div>
-                    {recursiveMap(this.props.children, (c: any) => {
-                        if (typeof c === "string") {
-                            // TODO: Add more fields here.
-                            if (this.props.askForAppName) {
-                                c = c.split("^{form_appName}").join(this.state.appName);
-                            }
-                            if (this.props.askForAPIDomain) {
-                                c = c.split("^{form_apiDomain}").join(this.state.apiDomain);
-                            }
-                            if (this.props.askForWebsiteDomain) {
-                                c = c.split("^{form_websiteDomain}").join(this.state.websiteDomain);
-                            }
-                        }
-                        return c;
-                    })}
+                    {content}
                 </div>)
         } else {
 

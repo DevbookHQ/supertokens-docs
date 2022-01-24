@@ -62,19 +62,27 @@ pip install supertokens-python
 
 ## 2) Initialise SuperTokens
 
+export let nodeInitCode = '// 2) Initialise SuperTokens'
+
+Add the code below to your server's init file.
+
 <AppInfoForm
     askForAppName={true}
     askForAPIDomain={true}
-    askForWebsiteDomain={true}>
+    askForWebsiteDomain={true}
+    >
 
 <CoreInjector>
 
-Add the code below to your server's init file.
 
 <BackendSDKTabs>
 <TabItem value="nodejs">
 <NodeJSFrameworkSubTabsServerless>
 <TabItem value="express">
+<CoreInjector
+    askForWebsiteDomain={true}
+    onChange={(code) => nodeInitCode = code}
+>
 
 ```jsx
 let supertokens = require("supertokens-node");
@@ -100,6 +108,8 @@ supertokens.init({
     ]
 });
 ```
+
+</CoreInjector>
 </TabItem>
 
 <TabItem value="hapi">
@@ -347,8 +357,11 @@ init(
 
 ## 3) Add the SuperTokens APIs & CORS setup
 
+export let nodeAPICode = '// 3) Add the SuperTokens APIs & CORS setup'
+
 <AppInfoForm
-    askForWebsiteDomain={true}>
+    askForWebsiteDomain={true}
+>
 
 <BackendSDKTabs>
 <TabItem value="nodejs">
@@ -356,8 +369,12 @@ init(
 <TabItem value="express">
 
 Add the `middleware` **BEFORE all your routes**.
+<CoreInjector
+    onChange={(code) => nodeAPICode = code}
+>
 
 ```jsx
+let express = require("express");
 let cors = require("cors");
 let supertokens = require("supertokens-node");
 let {middleware} = require("supertokens-node/framework/express");
@@ -378,12 +395,14 @@ app.use(middleware());
 
 // ...your API routes
 ```
+
+</CoreInjector>
+
 This `middleware` adds a few APIs (see all the APIs [here](https://app.swaggerhub.com/apis/supertokens/FDI)):
 - `POST /auth/signup`: For signing up a user with email & password
 - `POST /auth/signin`: For signing in a user with email & password
 
 `/auth/` is a base path that [can be changed](../common-customizations/changing-base-path/api-base-path) if you want. 
-
 
 </TabItem>
 <TabItem value="hapi">
@@ -820,10 +839,15 @@ This `Middleware` adds a few APIs (see all the APIs [here](https://app.swaggerhu
 
 ## 4) Add the SuperTokens error handler
 
+export let nodeErrorCode = '// 4) Add the SuperTokens error handler'
+
 <BackendSDKTabs>
 <TabItem value="nodejs">
 <NodeJSFrameworkSubTabsServerless>
 <TabItem value="express">
+<CoreInjector
+    onChange={(code) => nodeErrorCode = code}
+>
 
 ```jsx
 let {errorHandler} = require("supertokens-node/framework/express");
@@ -835,9 +859,10 @@ app.use(errorHandler())
 // highlight-end
 
 // your own error handler
-app.use((err, req, res, next) => {...});
+// app.use((err, req, res, next) => {...});
 
 ```
+</CoreInjector>
 </TabItem>
 <TabItem value="hapi">
 
@@ -887,10 +912,20 @@ You can skip this step
 </BackendSDKTabs>
 
 ## 5) Test if sign up is setup correctly
+
+export const nodeRunCode = 
+`
+app.listen(3000)
+`
+
 - Visit the login form on the website.
 - Try to sign up.
 - If after signing up, you are redirected to `/`, everything is setup correctly 😁
 - If not, you can always ask for help via [Github issues](https://github.com/supertokens/supertokens-core/issues) or via [our Discord](https://supertokens.io/discord)
+
+<DevbookView
+code={nodeInitCode + '\n' + nodeAPICode + '\n' + nodeErrorCode + '\n' + nodeRunCode}
+/>
 
 
 ## 6) Setup the SuperTokens core

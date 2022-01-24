@@ -4,7 +4,9 @@ import { recursiveMap } from "../utils";
 import { getSaasApp } from "../api/saas/app";
 import { MOCK_ENABLED } from "../constants";
 
-type Props = {};
+type Props = {
+    onChange?: (text: string) => void
+};
 
 type State = {
     sessionState: "NOT_EXISTS" | "UNKNOWN"
@@ -17,7 +19,7 @@ export default class CoreInjector extends React.PureComponent<PropsWithChildren<
 
     isUnmounting = false;
 
-    constructor(props: PropsWithChildren<Props>) {
+    constructor(public props: PropsWithChildren<Props>) {
         super(props);
         this.state = {
             sessionState: "UNKNOWN"
@@ -26,7 +28,8 @@ export default class CoreInjector extends React.PureComponent<PropsWithChildren<
 
     render() {
         if (this.state.sessionState === "UNKNOWN") {
-            return recursiveMap(this.props.children, (c: any) => {
+            let text = ''
+            const content = recursiveMap(this.props.children, (c: any) => {
                 if (typeof c === "string") {
                     while (c.includes(" ^{coreInjector_connection_uri_comment}")) {
                         c = c.split(" ^{coreInjector_connection_uri_comment}").join('^{coreInjector_connection_uri_comment}')
@@ -40,13 +43,17 @@ export default class CoreInjector extends React.PureComponent<PropsWithChildren<
                     c = c.split("^{coreInjector_api_key}").join('""')
                     c = c.split("^{coreInjector_api_key_commented}").join('')
                     c = c.split("^{coreInjector_api_key_commented_with_hash}").join('')
+                    text += c
                 }
                 return c;
             });
+            this.props.onChange?.(text)
+            return content
         } else if (this.state.sessionState === "EXISTS") {
             let uri = this.state.uri;
             let key = this.state.key;
-            return recursiveMap(this.props.children, (c: any) => {
+            let text = ''
+            const content = recursiveMap(this.props.children, (c: any) => {
                 if (typeof c === "string") {
                     c = c.split("^{coreInjector_connection_uri_comment}").join('// These are the connection details of the app you created on supertokens.io')
                     c = c.split("^{coreInjector_connection_uri_comment_with_hash}").join('# These are the connection details of the app you created on supertokens.io')
@@ -54,11 +61,15 @@ export default class CoreInjector extends React.PureComponent<PropsWithChildren<
                     c = c.split("^{coreInjector_api_key}").join(`"${key}"`)
                     c = c.split("^{coreInjector_api_key_commented}").join('')
                     c = c.split("^{coreInjector_api_key_commented_with_hash}").join('')
+                    text += c
                 }
                 return c;
             });
+            this.props.onChange?.(text)
+            return content
         }
-        return recursiveMap(this.props.children, (c: any) => {
+        let text = ''
+        const content = recursiveMap(this.props.children, (c: any) => {
             if (typeof c === "string") {
                 c = c.split("^{coreInjector_connection_uri_comment}").join('// try.supertokens.io is for demo purposes. Replace this with the address of your core instance (sign up on supertokens.io), or self host a core.')
                 c = c.split("^{coreInjector_connection_uri_comment_with_hash}").join('# try.supertokens.io is for demo purposes. Replace this with the address of your core instance (sign up on supertokens.io), or self host a core.')
@@ -66,9 +77,12 @@ export default class CoreInjector extends React.PureComponent<PropsWithChildren<
                 c = c.split("^{coreInjector_api_key}").join('"IF YOU HAVE AN API KEY FOR THE CORE, ADD IT HERE"')
                 c = c.split("^{coreInjector_api_key_commented}").join('// ')
                 c = c.split("^{coreInjector_api_key_commented_with_hash}").join('# ')
+                text += c
             }
             return c;
         });
+        this.props.onChange?.(text)
+        return content
     }
 
     async componentDidMount() {

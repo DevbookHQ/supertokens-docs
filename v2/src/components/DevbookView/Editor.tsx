@@ -14,6 +14,7 @@ import {
 import {
   javascriptLanguage,
 } from '@codemirror/lang-javascript'
+import { oneDark } from '@codemirror/theme-one-dark'
 
 import './Editor.css';
 
@@ -40,6 +41,7 @@ function Editor({
       doc: initialCode,
       extensions: [
         basicSetup,
+        oneDark,
         changeWatcher,
         javascriptLanguage,
         keymap.of([
