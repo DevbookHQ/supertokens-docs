@@ -1,5 +1,5 @@
-// import './Output.css';
 import React from 'react';
+import './style.css';
 
 export interface Props {
   stdout?: string[]

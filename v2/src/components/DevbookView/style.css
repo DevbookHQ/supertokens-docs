@@ -1,0 +1,38 @@
+.dbk-wrapper {
+  width: 100%;
+  height: 100%;  
+}
+
+.output {
+  padding: 8px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+
+  background: #141414;
+  font-size: 13px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  white-space: pre;
+  line-height: 1.5;
+}
+
+.output .error {
+  color: #FC4F60;
+}
+
+.output .header {
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.editor {
+  flex: 1;
+  display: flex;
+  overflow: auto;
+  max-height: 100%;
+}
+
+.cm-editor {
+  flex: 1;  
+}

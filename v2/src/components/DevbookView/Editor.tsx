@@ -16,7 +16,7 @@ import {
 } from '@codemirror/lang-javascript'
 import { oneDark } from '@codemirror/theme-one-dark'
 
-import './Editor.css';
+import './style.css';
 
 export interface Props {
   initialCode: string
