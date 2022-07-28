@@ -134,6 +134,7 @@ module.exports = {
     ],
   ],
   plugins: [
+    '@devbookhq/docusaurus-code-video-plugin',
     [
       // loads the supertokens.com react bundle for footer and analytics etc..
       "./src/plugins/reactBundle",
